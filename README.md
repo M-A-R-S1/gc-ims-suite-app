@@ -36,10 +36,13 @@ python -m venv venv
 <br>
 
 ### 3. Install Dependencies
+Since this application uses PyTorch, please make sure that you have installed the CUDA Toolkit
+(https://developer.nvidia.com/cuda-downloads).<br><br>
 Install all required Python packages (PySide6, PyTorch, Pandas, etc.):
 ```bash
 pip install -r requirements.txt
 ```
+
 <br>
 
 ### 4. Run the App
@@ -63,6 +66,7 @@ require Python to be installed on the host machine. You can use PyInstaller for 
 ### 1. Building process
 Run the following command in the root directory of the project:
 ```bash
+pip install pyinstaller
 pyinstaller GC-IMS-Suite.spec
 ```
 

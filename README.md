@@ -16,7 +16,7 @@ This application allows users to easily manage GC-IMS projects, explore spectral
 
 ---
 
-## GETTING STARTED (FOR DEVELOPPERS)
+## GETTING STARTED (FOR DEVELOPERS)
 
 If you want to run the application from source or contribute to the code, follow these steps:
 

@@ -1,0 +1,11 @@
+.idea/
+/ui/mockups/psd/
+/dist/
+/build/
+.ipynb_checkpoints/
+.venv/
+venv/git
+__pycache__/
+*.pyc
+*.spec
+

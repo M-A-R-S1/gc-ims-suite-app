@@ -15,6 +15,7 @@ from misc.utils import get_resource_path
 import ims
 import torch
 import re
+import shutil
 import misc.vae_model
 import misc.dataloader
 from torch.utils.data import DataLoader
@@ -49,7 +50,10 @@ class ModelPage(QtWidgets.QWidget, Ui_ModelWidget):
         self.load_available_devices_to_combobox()
         self.update_peak_count_info()
 
+        # Connection buttons.
         self.pushButton_train_model.clicked.connect(self.on_start_training_clicked)
+        self.pushButton_export.clicked.connect(self.export_model)
+        self.pushButton_import.clicked.connect(self.import_model)
 
         # Defining the scroll area layout.
         self.scrollArea_recon_Contents.layout().setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
@@ -552,6 +556,7 @@ class ModelPage(QtWidgets.QWidget, Ui_ModelWidget):
         models_dir = get_resource_path("models")
         layout = self.scrollArea_models_Contents.layout()
         self.selected_model_tile = None
+        self.pushButton_export.setEnabled(False)
 
         # Falls das Widget im Designer versehentlich noch kein Layout bekommen hat:
         if layout is None:
@@ -587,6 +592,7 @@ class ModelPage(QtWidgets.QWidget, Ui_ModelWidget):
             if self.selected_model_tile is None:
                 self.on_model_selected(tile)
 
+
     def on_model_selected(self,
                           tile_widget: ModelTileWidget) -> None:
         """
@@ -600,6 +606,7 @@ class ModelPage(QtWidgets.QWidget, Ui_ModelWidget):
         # Set the highlight to the currently clicked tile.
         self.selected_model_tile = tile_widget
         self.selected_model_tile.set_selected(True)
+        self.pushButton_export.setEnabled(True)
 
         # 1. Das PyTorch Modell instanziieren (Parameter ggf. an dein Training anpassen!)
         self.current_device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -876,6 +883,89 @@ class ModelPage(QtWidgets.QWidget, Ui_ModelWidget):
         # 7. Textfeld leeren und Trainingsthread starten!
         self.lineEdit_name.clear()
         self.thread.start()
+
+
+    def import_model(self) -> None:
+        # Open the file dialog.
+        file_path, _ = QtWidgets.QFileDialog.getOpenFileName(self,
+                                                             caption="Import trained Model",
+                                                             dir="",
+                                                             filter="PyTorch Model (*.pt);;All Files (*)")
+
+        # User canceled the process.
+        if not file_path:
+            return
+
+
+        try:
+            source_path = Path(file_path)
+            model_dir = get_resource_path("models")
+
+            # Check if the models folder is present (should always).
+            model_dir.mkdir(parents=True, exist_ok=True)
+            destination_path = model_dir / source_path.name
+
+            # Is the model already there?
+            if destination_path.exists():
+                CustomMessageDialog.show_error("Import Error",
+                                        f"A model with the name '{source_path.stem}' already exists.")
+                return
+
+            # Copy the model into the model folder.
+            shutil.copy2(source_path, destination_path)
+
+            # reload the models into the scroll area.
+            self.load_models_to_scrollarea()
+
+            # Show success dialog box
+            CustomMessageDialog.show_info("Import Successful",
+                                       f"The model '{source_path.stem}' was successfully imported!")
+
+        except Exception as e:
+            CustomMessageDialog.show_error("Import Error",
+                                        f"An error occurred while importing the model:\n{str(e)}")
+
+
+    def export_model(self) -> None:
+
+        # Is a model in the scroll area list selected?
+        if not self.selected_model_tile:
+            return
+
+        # Get the model name and path.
+        model_name = self.selected_model_tile.name
+        source_path = get_resource_path("models") / f"{model_name}.pt"
+
+        # Check if the path to the model is correct.
+        if not source_path.exists():
+            CustomMessageDialog.show_error("Export Error", "The selected model file could not be found.")
+            return
+
+        # Dialog - Where should the model be exported to?
+        destination_path, _ = QtWidgets.QFileDialog.getSaveFileName(self,
+                                                                    caption="Export Model",
+                                                                    dir=f"{model_name}.pt",
+                                                                    filter="PyTorch Model (*.pt);;All Files (*)")
+
+        # The user has canceled this process.
+        if not destination_path:
+            return
+
+        try:
+            # Add the .pt ending in case the user deleted it.
+            if not destination_path.endswith('.pt'):
+                destination_path += '.pt'
+
+            # Save the file to the desired path.
+            shutil.copy2(source_path, destination_path)
+
+            # Show success info.
+            CustomMessageDialog.show_info("Export Successful",
+                                       f"The model '{model_name}' was successfully exported.")
+
+        except Exception as e:
+            CustomMessageDialog.show_error("Export Error",
+                                        f"An error occurred while exporting the model:\n{str(e)}")
 
 
 class ModelTileWidget(QtWidgets.QWidget, Ui_ModelTile):

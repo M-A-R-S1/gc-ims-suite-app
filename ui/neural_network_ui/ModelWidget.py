@@ -111,7 +111,7 @@ class Ui_ModelWidget(object):
         self.scrollArea_models.setWidgetResizable(True)
         self.scrollArea_models_Contents = QWidget()
         self.scrollArea_models_Contents.setObjectName(u"scrollArea_models_Contents")
-        self.scrollArea_models_Contents.setGeometry(QRect(0, 0, 530, 378))
+        self.scrollArea_models_Contents.setGeometry(QRect(0, 0, 530, 320))
         self.gridLayout = QGridLayout(self.scrollArea_models_Contents)
         self.gridLayout.setObjectName(u"gridLayout")
         self.gridLayout.setVerticalSpacing(10)
@@ -122,6 +122,53 @@ class Ui_ModelWidget(object):
         self.scrollArea_models.setWidget(self.scrollArea_models_Contents)
 
         self.verticalLayout_6.addWidget(self.scrollArea_models)
+
+        self.model_list_button_holder = QWidget(self.model_list_inner_container)
+        self.model_list_button_holder.setObjectName(u"model_list_button_holder")
+        self.model_list_button_holder.setStyleSheet(u"border: 0px;")
+        self.horizontalLayout_3 = QHBoxLayout(self.model_list_button_holder)
+        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.pushButton_export = QPushButton(self.model_list_button_holder)
+        self.pushButton_export.setObjectName(u"pushButton_export")
+        self.pushButton_export.setMinimumSize(QSize(0, 40))
+        font3 = QFont()
+        font3.setFamilies([u"Lato"])
+        font3.setPointSize(14)
+        self.pushButton_export.setFont(font3)
+        self.pushButton_export.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.pushButton_export.setStyleSheet(u"QPushButton {\n"
+"    border: 1px solid #ff9000;\n"
+"    background-color: #232323; \n"
+"    color: #ff9000;\n"
+"    border-radius: 10px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"	background-color: #131313;\n"
+"}")
+
+        self.horizontalLayout_3.addWidget(self.pushButton_export)
+
+        self.pushButton_import = QPushButton(self.model_list_button_holder)
+        self.pushButton_import.setObjectName(u"pushButton_import")
+        self.pushButton_import.setMinimumSize(QSize(0, 40))
+        self.pushButton_import.setFont(font3)
+        self.pushButton_import.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.pushButton_import.setStyleSheet(u"QPushButton {\n"
+"    border: 1px solid #ff9000;\n"
+"    background-color: #232323; \n"
+"    color: #ff9000;\n"
+"    border-radius: 10px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"	background-color: #131313;\n"
+"}")
+
+        self.horizontalLayout_3.addWidget(self.pushButton_import)
+
+
+        self.verticalLayout_6.addWidget(self.model_list_button_holder)
 
 
         self.verticalLayout_5.addWidget(self.model_list_inner_container)
@@ -156,11 +203,11 @@ class Ui_ModelWidget(object):
         self.lineEdit_name.setObjectName(u"lineEdit_name")
         self.lineEdit_name.setMinimumSize(QSize(0, 50))
         self.lineEdit_name.setMaximumSize(QSize(16777215, 16777215))
-        font3 = QFont()
-        font3.setFamilies([u"Lato"])
-        font3.setPointSize(12)
-        font3.setWeight(QFont.Light)
-        self.lineEdit_name.setFont(font3)
+        font4 = QFont()
+        font4.setFamilies([u"Lato"])
+        font4.setPointSize(12)
+        font4.setWeight(QFont.Light)
+        self.lineEdit_name.setFont(font4)
         self.lineEdit_name.setStyleSheet(u"QLineEdit {\n"
 "    border: 1px solid #ff9000;\n"
 "    background-color: #232323; \n"
@@ -182,10 +229,10 @@ class Ui_ModelWidget(object):
         self.label_epochs.setObjectName(u"label_epochs")
         self.label_epochs.setMinimumSize(QSize(0, 0))
         self.label_epochs.setMaximumSize(QSize(150, 40))
-        font4 = QFont()
-        font4.setFamilies([u"Lato"])
-        font4.setPointSize(12)
-        self.label_epochs.setFont(font4)
+        font5 = QFont()
+        font5.setFamilies([u"Lato"])
+        font5.setPointSize(12)
+        self.label_epochs.setFont(font5)
         self.label_epochs.setStyleSheet(u"color: #ebebeb;\n"
 "background-color: #2e2e2e;")
         self.label_epochs.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
@@ -202,7 +249,7 @@ class Ui_ModelWidget(object):
         self.comboBox_epochs.setObjectName(u"comboBox_epochs")
         self.comboBox_epochs.setMinimumSize(QSize(200, 40))
         self.comboBox_epochs.setMaximumSize(QSize(20000, 40))
-        self.comboBox_epochs.setFont(font4)
+        self.comboBox_epochs.setFont(font5)
         self.comboBox_epochs.setStyleSheet(u"QComboBox {\n"
 "    border: 1px solid #ff9000;\n"
 "    background-color: #232323; \n"
@@ -234,7 +281,7 @@ class Ui_ModelWidget(object):
         self.label_device.setObjectName(u"label_device")
         self.label_device.setMinimumSize(QSize(0, 0))
         self.label_device.setMaximumSize(QSize(150, 40))
-        self.label_device.setFont(font4)
+        self.label_device.setFont(font5)
         self.label_device.setStyleSheet(u"color: #ebebeb;\n"
 "background-color: #2e2e2e;")
         self.label_device.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
@@ -245,7 +292,7 @@ class Ui_ModelWidget(object):
         self.comboBox_device.setObjectName(u"comboBox_device")
         self.comboBox_device.setMinimumSize(QSize(200, 40))
         self.comboBox_device.setMaximumSize(QSize(20000, 40))
-        self.comboBox_device.setFont(font4)
+        self.comboBox_device.setFont(font5)
         self.comboBox_device.setStyleSheet(u"QComboBox {\n"
 "    border: 1px solid #ff9000;\n"
 "    background-color: #232323; \n"
@@ -265,12 +312,12 @@ class Ui_ModelWidget(object):
 
         self.label_model_info = QLabel(self.frame_new_model)
         self.label_model_info.setObjectName(u"label_model_info")
-        font5 = QFont()
-        font5.setFamilies([u"Lato"])
-        font5.setPointSize(12)
-        font5.setWeight(QFont.Light)
-        font5.setKerning(True)
-        self.label_model_info.setFont(font5)
+        font6 = QFont()
+        font6.setFamilies([u"Lato"])
+        font6.setPointSize(12)
+        font6.setWeight(QFont.Light)
+        font6.setKerning(True)
+        self.label_model_info.setFont(font6)
         self.label_model_info.setStyleSheet(u"color: #9e9e9e;\n"
 "background-color: #2e2e2e;\n"
 "margin-bottom: 5px;")
@@ -281,11 +328,11 @@ class Ui_ModelWidget(object):
         self.pushButton_train_model = QPushButton(self.frame_new_model)
         self.pushButton_train_model.setObjectName(u"pushButton_train_model")
         self.pushButton_train_model.setMinimumSize(QSize(0, 50))
-        font6 = QFont()
-        font6.setFamilies([u"Lato"])
-        font6.setPointSize(20)
-        font6.setWeight(QFont.Light)
-        self.pushButton_train_model.setFont(font6)
+        font7 = QFont()
+        font7.setFamilies([u"Lato"])
+        font7.setPointSize(20)
+        font7.setBold(False)
+        self.pushButton_train_model.setFont(font7)
         self.pushButton_train_model.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.pushButton_train_model.setStyleSheet(u"QPushButton {\n"
 "    border: 1px solid #00eaff;\n"
@@ -398,10 +445,10 @@ class Ui_ModelWidget(object):
         self.pushButton_toggle_peak_marker = QPushButton(self.preview_container)
         self.pushButton_toggle_peak_marker.setObjectName(u"pushButton_toggle_peak_marker")
         self.pushButton_toggle_peak_marker.setMinimumSize(QSize(0, 60))
-        font7 = QFont()
-        font7.setFamilies([u"Lato"])
-        font7.setPointSize(20)
-        self.pushButton_toggle_peak_marker.setFont(font7)
+        font8 = QFont()
+        font8.setFamilies([u"Lato"])
+        font8.setPointSize(20)
+        self.pushButton_toggle_peak_marker.setFont(font8)
         self.pushButton_toggle_peak_marker.setStyleSheet(u"QPushButton {\n"
 "    border: 1px solid #ff9000;\n"
 "    background-color: #232323; \n"
@@ -432,6 +479,8 @@ class Ui_ModelWidget(object):
         ModelWidget.setWindowTitle(QCoreApplication.translate("ModelWidget", u"Form", None))
         self.label_header.setText(QCoreApplication.translate("ModelWidget", u"Model", None))
         self.label_container_header_2.setText(QCoreApplication.translate("ModelWidget", u"Models", None))
+        self.pushButton_export.setText(QCoreApplication.translate("ModelWidget", u"Export", None))
+        self.pushButton_import.setText(QCoreApplication.translate("ModelWidget", u"Import", None))
         self.label_header_2.setText(QCoreApplication.translate("ModelWidget", u"Train new model", None))
         self.lineEdit_name.setText("")
         self.lineEdit_name.setPlaceholderText(QCoreApplication.translate("ModelWidget", u"Model name ...", None))

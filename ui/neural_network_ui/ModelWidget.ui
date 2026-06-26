@@ -146,7 +146,7 @@
 	border-radius: 10px;
 }</string>
            </property>
-           <layout class="QVBoxLayout" name="verticalLayout_6" stretch="0,0">
+           <layout class="QVBoxLayout" name="verticalLayout_6" stretch="0,0,0">
             <property name="spacing">
              <number>0</number>
             </property>
@@ -216,7 +216,7 @@ background-color: transparent;
                  <x>0</x>
                  <y>0</y>
                  <width>530</width>
-                 <height>378</height>
+                 <height>320</height>
                 </rect>
                </property>
                <layout class="QGridLayout" name="gridLayout">
@@ -238,6 +238,83 @@ background-color: transparent;
                 </item>
                </layout>
               </widget>
+             </widget>
+            </item>
+            <item>
+             <widget class="QWidget" name="model_list_button_holder" native="true">
+              <property name="styleSheet">
+               <string notr="true">border: 0px;</string>
+              </property>
+              <layout class="QHBoxLayout" name="horizontalLayout_3">
+               <item>
+                <widget class="QPushButton" name="pushButton_export">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <family>Lato</family>
+                   <pointsize>14</pointsize>
+                  </font>
+                 </property>
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QPushButton {
+    border: 1px solid #ff9000;
+    background-color: #232323; 
+    color: #ff9000;
+    border-radius: 10px;
+}
+
+QPushButton:hover {
+	background-color: #131313;
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>Export</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="pushButton_import">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <family>Lato</family>
+                   <pointsize>14</pointsize>
+                  </font>
+                 </property>
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QPushButton {
+    border: 1px solid #ff9000;
+    background-color: #232323; 
+    color: #ff9000;
+    border-radius: 10px;
+}
+
+QPushButton:hover {
+	background-color: #131313;
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>Import</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </widget>
             </item>
            </layout>
@@ -579,7 +656,7 @@ margin-bottom: 5px;</string>
                <font>
                 <family>Lato</family>
                 <pointsize>20</pointsize>
-                <fontweight>Light</fontweight>
+                <bold>false</bold>
                </font>
               </property>
               <property name="cursor">

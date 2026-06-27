@@ -896,6 +896,26 @@ class ModelPage(QtWidgets.QWidget, Ui_ModelWidget):
         if not file_path:
             return
 
+        # Validate the model before importing it. Was the model trained with this application?
+        try:
+            # load the model in save mode
+            loaded_data = torch.load(file_path, map_location='cpu', weights_only=True)
+            # make a dummy model for testing.
+            dummy_model = misc.vae_model.VariationalAutoencoderCNN(input_layers=1,
+                                                                   hidden_layers=64,
+                                                                   latent_dimension=16)
+
+            # try to load the weight of the model. This fails if the model was not created with this app.
+            dummy_model.load_state_dict(loaded_data)
+
+        # Throw an error if the model was not trained with this app.
+        except Exception as e:
+            CustomMessageDialog.show_error("Incompatible Model",
+                                        "This model is not compatible with this application!\n"
+                                                "Please choose another model for import.")
+
+            return
+
 
         try:
             source_path = Path(file_path)

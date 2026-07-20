@@ -437,6 +437,14 @@ class PeakExplorerPage(QtWidgets.QWidget, Ui_PeakExplorerWidget):
         :return: None.
         """
 
+        # Save the zoom status of the current spectrum.
+        if self.current_selected_spectrum is not None:
+            self.saved_xlim = self.canvas.axes.get_xlim()
+            self.saved_ylim = self.canvas.axes.get_ylim()
+        else:
+            self.saved_xlim = None
+            self.saved_ylim = None
+
         # Clear the peak widgets dictionary.
         self.clear_canvas()
         self.clear_peak_markers()
@@ -665,6 +673,13 @@ class PeakExplorerPage(QtWidgets.QWidget, Ui_PeakExplorerWidget):
         self.canvas.axes.clear()
         self.canvas.axes.set_facecolor('#191919')
 
+        extent_values = (
+            min(spectrum.drift_time),
+            max(spectrum.drift_time),
+            min(spectrum.ret_time),
+            max(spectrum.ret_time),
+        )
+
         # Draw the spectrum to the canvas.
         self.canvas.axes.imshow(
             spectrum.values,
@@ -673,12 +688,7 @@ class PeakExplorerPage(QtWidgets.QWidget, Ui_PeakExplorerWidget):
             cmap="RdBu_r",
             vmin=30,
             vmax=400,
-            extent=(
-                min(spectrum.drift_time),
-                max(spectrum.drift_time),
-                min(spectrum.ret_time),
-                max(spectrum.ret_time),
-            ),
+            extent=extent_values,
         )
 
         # Set the axis labels.
@@ -686,12 +696,26 @@ class PeakExplorerPage(QtWidgets.QWidget, Ui_PeakExplorerWidget):
         self.canvas.axes.set_ylabel("Retention Time [s]", labelpad=15)
         # Adjust the visual spacing of the canvas.
         self.canvas.fig.subplots_adjust(left=0.069, bottom=0.058, right=0.094, top=0.995)
+        self.canvas.fig.tight_layout()
+
+        # Remove the toolbar history.
+        if hasattr(self.toolbar, '_nav_stack'):
+            self.toolbar._nav_stack.clear()
+
+        # Save the 100% spectrum view to the toolbar history.
+        self.toolbar.push_current()
+
+        # Apply the saved zoom status.
+        if hasattr(self, 'saved_xlim') and self.saved_xlim is not None:
+            self.canvas.axes.set_xlim(self.saved_xlim)
+            self.canvas.axes.set_ylim(self.saved_ylim)
+            self.toolbar.push_current()
+
         # Show the toolbar.
         self.toolbar.show()
 
         # Apply a tight layout and draw the canvas.
         self.canvas_spectrum = self.canvas.copy_from_bbox(self.canvas.axes.bbox)
-        self.canvas.fig.tight_layout()
         self.draw_peak_markers(spectrum_widget)
 
 

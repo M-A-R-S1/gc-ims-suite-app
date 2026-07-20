@@ -884,6 +884,7 @@ class ConsensusPeakTile(QtWidgets.QWidget, Ui_ConsensusPeakTile):
 
         # Apply the color pallet to the image.
         q_image.setColorTable(qt_color_table)
+        q_image = q_image.mirrored(False, True)
         pixmap = QtGui.QPixmap.fromImage(q_image).scaled(60, 60, QtCore.Qt.KeepAspectRatio)
         self.peak_window.setPixmap(pixmap)
 

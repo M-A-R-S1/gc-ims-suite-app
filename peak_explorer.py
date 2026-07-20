@@ -7,6 +7,7 @@ from preprocessing import DatasetSubEntry, DatasetMainEntry, PlottingCanvas
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 from matplotlib import pyplot as plt
 from matplotlib import cm
+from matplotlib.patches import Rectangle
 from skimage.morphology import max_tree, h_maxima, area_opening
 from skimage.measure import label, regionprops
 from pathlib import Path
@@ -656,6 +657,8 @@ class PeakExplorerPage(QtWidgets.QWidget, Ui_PeakExplorerWidget):
         hdf5_file = hdf5_path / f"{Path(spectrum_widget.spectrum_path).stem}.hdf5"
         # Load the spectrum from the .hdf5 file.
         spectrum = ims.Spectrum.read_hdf5(hdf5_file)
+        # Save the loaded spectrum globally.
+        self.current_loaded_spectrum = spectrum
 
         # Clear the axes and set their colors.
         self.canvas.fig.patch.set_facecolor('#191919')
@@ -705,6 +708,14 @@ class PeakExplorerPage(QtWidgets.QWidget, Ui_PeakExplorerWidget):
         self.canvas_peak_marker_base = None
         self.canvas_peak_marker_fill = None
 
+        # Clear the peak box.
+        if hasattr(self, 'canvas_peak_box') and self.canvas_peak_box is not None:
+            try:
+                self.canvas_peak_box.remove()
+            except Exception:
+                pass
+            self.canvas_peak_box = None
+
         # If there are peaks mark them on the plot canvas.
         if peak_times and self.show_peak_marker:
             # Extract peak information.
@@ -721,18 +732,56 @@ class PeakExplorerPage(QtWidgets.QWidget, Ui_PeakExplorerWidget):
                 else:
                     colors.append('#00eaff' if activity == 1 else '#da05ab')
 
-            # Falls die Scatter-Objekte noch nicht existieren, erstellen wir sie
-            self.canvas_peak_marker_base = self.canvas.axes.scatter(drift_time, retention_time, marker='o', s=150,
-                                                                    color='black', linewidths=2.0)
-            self.canvas_peak_marker_fill = self.canvas.axes.scatter(drift_time, retention_time, marker='o', s=75,
-                                                                    color=colors, linewidths=1.0, picker=True)
+            # Create objects for the markers.
+            self.canvas_peak_marker_base = self.canvas.axes.scatter(drift_time, retention_time, marker='o', s=150, color='black', linewidths=2.0)
+            self.canvas_peak_marker_fill = self.canvas.axes.scatter(drift_time, retention_time, marker='o', s=75, color=colors, linewidths=1.0, picker=True)
 
             # Save the ids for the pick event.
             self.canvas_peak_marker_fill.peak_ids = peak_ids
-            # 3. Nur die Scatter-Objekte neu rendern
+
+            # Create a border around the selected peak.
+            if self.selected_peak_id is not None and hasattr(self, 'current_loaded_spectrum'):
+                # Get the coordinates of the selected peak.
+                selected_peak = next((p for p in peak_times if p[0] == self.selected_peak_id), None)
+                if selected_peak:
+                    sel_ret_time = selected_peak[1]
+                    sel_drift_time = selected_peak[2]
+
+                    # Find the indices inside the spectrum.
+                    ret_idx = np.argmin(np.abs(self.current_loaded_spectrum.ret_time - sel_ret_time))
+                    drift_idx = np.argmin(np.abs(self.current_loaded_spectrum.drift_time - sel_drift_time))
+
+                    # Calculate the borders.
+                    peak_radius = 5
+                    true_offset = 3 * peak_radius
+
+                    start_ret_idx = max(0, ret_idx - true_offset)
+                    end_ret_idx = min(len(self.current_loaded_spectrum.ret_time) - 1, ret_idx + true_offset)
+                    start_drift_idx = max(0, drift_idx - true_offset)
+                    end_drift_idx = min(len(self.current_loaded_spectrum.drift_time) - 1, drift_idx + true_offset)
+
+                    # Recalculate indices into times.
+                    box_ret_start = self.current_loaded_spectrum.ret_time[start_ret_idx]
+                    box_ret_end = self.current_loaded_spectrum.ret_time[end_ret_idx]
+                    box_drift_start = self.current_loaded_spectrum.drift_time[start_drift_idx]
+                    box_drift_end = self.current_loaded_spectrum.drift_time[end_drift_idx]
+
+                    # Add the box around the peak.
+                    self.canvas_peak_box = Rectangle((box_drift_start, box_ret_start),
+                                                     box_drift_end - box_drift_start,
+                                                     box_ret_end - box_ret_start,
+                        linewidth=2,
+                        edgecolor='#ff9000',
+                        facecolor='none',
+                        linestyle='--'
+                    )
+                    self.canvas.axes.add_patch(self.canvas_peak_box)
+
+            # Rerender markers and the box.
             self.canvas.axes.draw_artist(self.canvas_peak_marker_base)
             self.canvas.axes.draw_artist(self.canvas_peak_marker_fill)
-
+            if hasattr(self, 'canvas_peak_box') and self.canvas_peak_box is not None:
+                self.canvas.axes.draw_artist(self.canvas_peak_box)
 
     def clear_peak_markers(self):
         self.peak_widgets.clear()
@@ -744,6 +793,14 @@ class PeakExplorerPage(QtWidgets.QWidget, Ui_PeakExplorerWidget):
         if hasattr(self, 'canvas_peak_marker_fill') and self.canvas_peak_marker_fill is not None:
             self.canvas_peak_marker_fill.remove()
             self.canvas_peak_marker_fill = None
+
+        if hasattr(self, 'canvas_peak_box') and self.canvas_peak_box is not None:
+            try:
+                self.canvas_peak_box.remove()
+            except Exception:
+                pass
+            self.canvas_peak_box = None
+
         self.canvas_spectrum = None
         self.canvas.draw()
 
@@ -1381,6 +1438,7 @@ class PeakTileWidget(QtWidgets.QFrame):
 
             # Apply the color pallet to the image.
             q_image.setColorTable(qt_color_table)
+            q_image = q_image.mirrored(False, True)
             pixmap = QtGui.QPixmap.fromImage(q_image).scaled(80, 80, QtCore.Qt.KeepAspectRatio)
             self.image_label.setPixmap(pixmap)
         except:

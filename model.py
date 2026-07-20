@@ -1172,6 +1172,7 @@ class ModelReconTile(QtWidgets.QWidget, Ui_ModelReconTile):
 
         # Apply the color pallet to the image.
         q_image.setColorTable(qt_color_table)
+        q_image = q_image.mirrored(False, True)
         pixmap = QtGui.QPixmap.fromImage(q_image).scaled(70, 70, QtCore.Qt.KeepAspectRatio)
         self.peak_window_original.setPixmap(pixmap)
         self.peak_window_recon.setPixmap(pixmap)

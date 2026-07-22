@@ -1001,7 +1001,8 @@ class PreprocessingWorker(QtCore.QObject):
                     return
 
                 # Load the ims spectrum and create a copy.
-                spec = ims.Spectrum.read_mea(spectrum_path).binning()
+                #spec = ims.Spectrum.read_mea(spectrum_path).binning()
+                spec = ims.Spectrum.read_mea(spectrum_path)
                 spectrum = spec.copy()
                 # Set the drifttime coordinate of the RIP to 0.
                 spectrum.riprel()

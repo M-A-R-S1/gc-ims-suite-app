@@ -385,7 +385,7 @@ class PreprocessingPage(QtWidgets.QWidget, Ui_PreprocessingWidget):
             aspect="auto",
             cmap="RdBu_r",
             vmin=30,
-            vmax=400,
+            vmax=800,
             extent=(
                 min(spectrum.drift_time),
                 max(spectrum.drift_time),

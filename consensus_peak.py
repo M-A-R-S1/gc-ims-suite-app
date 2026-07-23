@@ -469,7 +469,7 @@ class ConsensusPeakPage(QtWidgets.QWidget, Ui_ConsensusPeakWidget):
             aspect="auto",
             cmap="RdBu_r",
             vmin=30,
-            vmax=400,
+            vmax=800,
             extent=(
                 min(spectrum.drift_time),
                 max(spectrum.drift_time),
@@ -520,7 +520,7 @@ class ConsensusPeakPage(QtWidgets.QWidget, Ui_ConsensusPeakWidget):
                 else:
                     colors.append('#00eaff' if activity == 1 else '#da05ab')
 
-            # Falls die Scatter-Objekte noch nicht existieren, erstellen wir sie
+            # Create the base and fill marker objects.
             self.canvas_peak_marker_base = self.canvas.axes.scatter(drift_time, retention_time, marker='o', s=150,
                                                                     color='black', linewidths=2.0)
             self.canvas_peak_marker_fill = self.canvas.axes.scatter(drift_time, retention_time, marker='o', s=75,
@@ -857,12 +857,15 @@ class ConsensusPeakTile(QtWidgets.QWidget, Ui_ConsensusPeakTile):
         :return: None.
         """
 
-        # Load the peak .npy file and normalize the values.
+        # Load the peak .npy file.
         peak_data = np.load(npy_path)
-        if peak_data.max() > peak_data.min():
-            normalized_peak_data = (peak_data - peak_data.min()) / (peak_data.max() - peak_data.min()) * 255
-        else:
-            normalized_peak_data = peak_data * 0
+        # Intensity limits.
+        vmin = 30
+        vmax = 800
+        # Normalize between 30 and 800.
+        normalized_peak_data = (peak_data - vmin) / (vmax - vmin) * 255
+        # Intensity clipping to prevend overflow values (over 400 or under 30)
+        normalized_peak_data = np.clip(normalized_peak_data, 0, 255)
 
         # change the dataformat and define a colormap.
         image_data = normalized_peak_data.astype(np.uint8)

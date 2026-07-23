@@ -687,7 +687,7 @@ class PeakExplorerPage(QtWidgets.QWidget, Ui_PeakExplorerWidget):
             aspect="auto",
             cmap="RdBu_r",
             vmin=30,
-            vmax=400,
+            vmax=800,
             extent=extent_values,
         )
 
@@ -1435,12 +1435,15 @@ class PeakTileWidget(QtWidgets.QFrame):
         """
 
         try:
-            # Load the peak .npy file and normalize the values.
+            # Load the peak .npy file.
             peak_data = np.load(npy_path)
-            if peak_data.max() > peak_data.min():
-                normalized_peak_data = (peak_data - peak_data.min()) / (peak_data.max() - peak_data.min()) * 255
-            else:
-                normalized_peak_data = peak_data * 0
+            # Intensity limits.
+            vmin = 30
+            vmax = 800
+            # Normalize between 30 and 800.
+            normalized_peak_data = (peak_data - vmin) / (vmax - vmin) * 255
+            # Intensity clipping to prevend overflow values (over 400 or under 30)
+            normalized_peak_data = np.clip(normalized_peak_data, 0, 255)
 
             # change the dataformat and define a colormap.
             image_data = normalized_peak_data.astype(np.uint8)

@@ -748,7 +748,7 @@ class DatasetPage(QtWidgets.QWidget, Ui_DatasetWidget):
             aspect="auto",
             cmap="RdBu_r",
             vmin=30,
-            vmax=400,
+            vmax=800,
             extent=(
                 min(spectrum.drift_time),
                 max(spectrum.drift_time),

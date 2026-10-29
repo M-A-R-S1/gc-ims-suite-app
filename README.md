@@ -18,8 +18,8 @@ This application allows users to easily manage GC-IMS projects, explore spectral
 
 ## READY TO USE APPLICATION DOWNLOAD
 
-Windows Application (64-bit, zip file) -> https://www.biologie-hilfe.de/GC-IMS-Suite-windows.zip
-Linux Application (tar.gz file) -> https://www.biologie-hilfe.de/GC-IMS-Suite-Linux.tar.gz
+* Windows Application (64-bit, zip file) -> https://www.biologie-hilfe.de/GC-IMS-Suite-windows.zip
+* Linux Application (tar.gz file) -> https://www.biologie-hilfe.de/GC-IMS-Suite-Linux.tar.gz
 
 ---
 
